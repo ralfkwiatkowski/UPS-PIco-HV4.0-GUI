@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Systemstatus</title>
+    <script>
+        function fetchData() {
+            fetch('/get_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('cpu_temp').innerText = data.cpu_temp;
+                    document.getElementById('fan_status').innerText = data.fan_status;
+                    document.getElementById('current_threshold').innerText = data.current_threshold;
+                    document.getElementById('powering_mode').innerText = data.powering_mode;
+                    document.getElementById('battery_level').innerText = data.battery_level;
+                    document.getElementById('capacitor_level').innerText = data.capacitor_level;
+                    document.getElementById('battery_type').innerText = data.battery_type;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        setInterval(fetchData, 1000); // Aktualisiere alle 1000 Millisekunden (1 Sekunde)
+        window.onload = fetchData; // Initiales Laden der Daten
+    </script>
+    <style>
+        table {
+            width: 70%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            text-align: left;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Systemstatus UPS Pico HV4.0</h2>
+    <table>
+        <tr>
+            <th>Parameter</th>
+            <th>Wert</th>
+            <th>Neuer Wert</th>
+            <th>Aktion</th>
+        </tr>
+        <tr>
+            <td>CPU Temperatur</td>
+            <td id="cpu_temp">{{ cpu_temp }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Lüfterstatus</td>
+            <td id="fan_status">{{ fan_status }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Aktueller Schwellenwert</td>
+            <td id="current_threshold">{{ current_threshold }}</td>
+            <td>
+                <form method="post" action="/set_threshold">
+                    <input type="text" name="new_threshold" placeholder="Neuer Schwellenwert">
+            </td>
+            <td>
+                    <button type="submit" class="button">Schwellenwert setzen</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>Powering Mode</td>
+            <td id="powering_mode">{{ powering_mode }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Batterie Level</td>
+            <td id="battery_level">{{ battery_level }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Onboard Capacitor Level</td>
+            <td id="capacitor_level">{{ capacitor_level }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Batterie Typ</td>
+            <td id="battery_type">{{ battery_type }}</td>
+            <td>
+                <form method="post" action="/set_battery_type">
+                    <input type="text" name="new_battery_type" placeholder="Neuer Batterie Typ">
+            </td>
+            <td>
+                    <button type="submit" class="button">Batterie Typ setzen</button>
+                </form>
+            </td>
+    </table>
+</body>
+</html>
