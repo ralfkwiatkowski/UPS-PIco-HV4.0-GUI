@@ -137,7 +137,7 @@ def index():
         "capacitor_level": getSCAPLevel(),
         "battery_type": getBatteryType()
     }
-    return render_template("Pico_Cht_rkw_10.html", **data)
+    return render_template("Pico_GUI.html", **data)
 
 @app.route("/get_data")
 def get_data():
